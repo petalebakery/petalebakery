@@ -33,7 +33,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",             // local dev
-      "https://petale-frontend.vercel.app" // deployed frontend (update if renamed)
+      "https://petalebakery-frontend.onrender.com" // deployed frontend (update if renamed)
     ],
     credentials: false,
   })
