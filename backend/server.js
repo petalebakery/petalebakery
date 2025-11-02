@@ -32,9 +32,9 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",             
-      "https://petalebakery.com",          // your live frontend
-      "https://www.petalebakery.com",      // optional www
+      "http://localhost:5173",            // local dev
+      "https://petalebakery.com",         // live domain
+      "https://www.petalebakery.com",     // optional www
     ],
     credentials: false,
   })
@@ -58,14 +58,22 @@ app.use("/api/preorder", preorderRoutes);
 app.use("/api/admin/preorder", adminPreorderRoutes);
 app.use("/api/checkout", checkoutRoutes);
 
+// ===== Health Check (safe for Render) =====
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", message: "Pétale Bakery API healthy 🌸" });
+});
+
 // ===== Serve Frontend (React Build) =====
 const buildPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(buildPath));
 
-// ===== React Fallback for Non-API Routes =====
-app.get("*", (req, res) => {
-  // serve index.html for any non-API route (so refreshes work)
-  res.sendFile(path.join(buildPath, "index.html"));
+// ===== React Fallback for Non-API Routes (Express 5-safe) =====
+app.use((req, res, next) => {
+  if (!req.path.startsWith("/api") && !req.path.startsWith("/uploads")) {
+    res.sendFile(path.join(buildPath, "index.html"));
+  } else {
+    next();
+  }
 });
 
 // ===== MongoDB Connection =====
@@ -75,8 +83,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB Connected");
-    app.listen(PORT, () =>
-      console.log(`🚀 Server running on port ${PORT}`)
-    );
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   })
   .catch((err) => console.error("Mongo connection error:", err));
