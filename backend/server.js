@@ -32,8 +32,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",          // local dev
-      "https://petale-frontend.vercel.app" // your deployed frontend (update if renamed)
+      "http://localhost:5173",             // local dev
+      "https://petale-frontend.vercel.app" // deployed frontend (update if renamed)
     ],
     credentials: false,
   })
@@ -53,21 +53,26 @@ app.use("/api/auth", authRoutes);
 app.use("/api/finance", financeRoutes);
 
 // ===== 🧁 Pre-Order Routes =====
-app.use("/api/preorder", preorderRoutes);            // public: check availability
-app.use("/api/admin/preorder", adminPreorderRoutes); // admin: manage capacity
-app.use("/api/checkout", checkoutRoutes);            // customer preorder creation
+app.use("/api/preorder", preorderRoutes);
+app.use("/api/admin/preorder", adminPreorderRoutes);
+app.use("/api/checkout", checkoutRoutes);
+
+// ===== Health Check for Render =====
+app.get("/", (req, res) => {
+  res.status(200).send("Pétale Bakery API is running 🌸");
+});
 
 // ===== Serve Frontend (React Build) =====
 const buildPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(buildPath));
 
-// ===== React fallback for non-API routes (safe regex for Node 22+) =====
+// ===== React Fallback for Non-API Routes =====
 app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
 // ===== MongoDB Connection =====
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 mongoose
   .connect(process.env.MONGO_URI)
