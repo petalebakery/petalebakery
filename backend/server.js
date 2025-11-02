@@ -14,9 +14,9 @@ import authRoutes from "./routes/authRoutes.js";
 import financeRoutes from "./routes/financeRoutes.js";
 
 // 🧁 NEW Pre-Order System
-import preorderRoutes from "./routes/preorderRoutes.js";            // check available dates/windows
-import adminPreorderRoutes from "./routes/adminPreorderRoutes.js";  // manage capacity/blackouts
-import checkoutRoutes from "./routes/checkoutRoutes.js";            // place pre-orders (no Stripe)
+import preorderRoutes from "./routes/preorderRoutes.js";            
+import adminPreorderRoutes from "./routes/adminPreorderRoutes.js";  
+import checkoutRoutes from "./routes/checkoutRoutes.js";            
 
 // ===== Config =====
 dotenv.config();
@@ -32,8 +32,9 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",             // local dev
-      "https://petalebakery-frontend.onrender.com" // deployed frontend (update if renamed)
+      "http://localhost:5173",             
+      "https://petalebakery.com",          // your live frontend
+      "https://www.petalebakery.com",      // optional www
     ],
     credentials: false,
   })
@@ -57,17 +58,13 @@ app.use("/api/preorder", preorderRoutes);
 app.use("/api/admin/preorder", adminPreorderRoutes);
 app.use("/api/checkout", checkoutRoutes);
 
-// ===== Health Check for Render =====
-app.get("/", (req, res) => {
-  res.status(200).send("Pétale Bakery API is running 🌸");
-});
-
 // ===== Serve Frontend (React Build) =====
 const buildPath = path.join(__dirname, "../frontend/dist");
 app.use(express.static(buildPath));
 
 // ===== React Fallback for Non-API Routes =====
-app.get(/^\/(?!api).*/, (req, res) => {
+app.get("*", (req, res) => {
+  // serve index.html for any non-API route (so refreshes work)
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
