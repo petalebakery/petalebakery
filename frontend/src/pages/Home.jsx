@@ -13,11 +13,8 @@ export default function Home() {
             src={floralSrc}
             alt="Floral background"
             className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-auto object-cover pointer-events-none"
-            style={{
-              opacity: 0.25, // slightly fainter
-            }}
+            style={{ opacity: 0.25 }}
           />
-          {/* Soft fade at the bottom so it vanishes before divider */}
           <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-b from-transparent to-[#fffaf1] pointer-events-none" />
         </div>
 
@@ -34,8 +31,7 @@ export default function Home() {
               Pétale Bakery
             </h1>
             <p className="text-lg md:text-xl text-darkbrown/80 mb-10 leading-relaxed">
-              Handcrafted indulgence inspired by French patisseries — elegant,
-              floral, and made with love.
+              Handcrafted indulgence — elegant, floral, and made with love.
             </p>
             <Link
               to="/menu"
@@ -46,61 +42,39 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Divider — floral stops right above this line */}
         <div className="relative z-10 h-px bg-taupe/30 mx-auto w-3/4 my-16"></div>
       </div>
 
-      {/* 🍰 Signature Collection */}
+      {/* 🍪 Signature Cookie Collection */}
       <section className="relative z-10 py-24 px-6 text-center bg-cream">
         <h2 className="text-4xl md:text-5xl font-serif text-darkbrown mb-6">
-          Signature Collection
+          Signature Cookie Collection
         </h2>
         <p className="text-darkbrown/70 max-w-2xl mx-auto mb-16 leading-relaxed">
-          Discover our most beloved creations — from delicate macarons to buttery
-          cookies and petite cakes crafted to perfection.
+          Discover our signature chunky cookies — soft, golden, and freshly baked
+          to perfection.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
-          {[
-            {
-              src: "/macarons.jpg",
-              title: "Parisian Macarons",
-              desc: "Delicate almond shells filled with silky ganache — rose, pistachio, and vanilla.",
-            },
-            {
-              src: "/cookies.jpg",
-              title: "Signature Cookies",
-              desc: "Golden, buttery perfection with Belgian chocolate and a soft, warm center.",
-            },
-            {
-              src: "/cakes.jpg",
-              title: "Petite Cakes",
-              desc: "Velvety layers of sponge and cream infused with seasonal flavors.",
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 group"
-            >
-              <img
-                src={item.src}
-                alt={item.title}
-                className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="p-8">
-                <h3 className="text-2xl font-serif text-darkbrown mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-darkbrown/70 text-sm leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
+        <div className="max-w-md mx-auto">
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 group">
+            <img
+              src="/cookies.jpg"
+              alt="Signature Cookies"
+              className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="p-8">
+              <h3 className="text-2xl font-serif text-darkbrown mb-2">
+                Signature Cookies
+              </h3>
+              <p className="text-darkbrown/70 text-sm leading-relaxed">
+                Our best-selling chunky cookies — rich Belgian chocolate, crisp
+                edges, and a melt-in-your-mouth center.
+              </p>
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
-      {/* Divider */}
       <div className="h-px bg-taupe/30 mx-auto w-3/4 my-16"></div>
 
       {/* 🌷 The Art of Petalé */}
@@ -110,12 +84,11 @@ export default function Home() {
         </h2>
         <p className="max-w-3xl mx-auto text-darkbrown/80 leading-relaxed text-lg">
           Each creation at Petalé Bakery is more than dessert — it’s an experience.
-          Inspired by timeless French tradition and delicate floral design, we craft
-          every pastry with precision, grace, and a sprinkle of magic.
+          Inspired by delicate floral design, we craft every cookie with precision,
+          grace, and a sprinkle of magic.
         </p>
       </section>
 
-      {/* Divider */}
       <div className="h-px bg-taupe/30 mx-auto w-3/4 my-16"></div>
 
       {/* 🌹 Final Call */}
