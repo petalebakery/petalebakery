@@ -56,7 +56,7 @@ app.use("/api/preorder", preorderRoutes);
 app.use("/api/admin/preorder", adminPreorderRoutes);
 app.use("/api/checkout", checkoutRoutes);
 
-// ====== Health Check (MUST be before frontend routes) ======
+// ====== Health Check (for Render monitoring) ======
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -72,11 +72,14 @@ app.get("/", (req, res) => {
 // ====== Serve Frontend (React Build) ======
 app.use(express.static(path.join(__dirname, "frontend", "dist")));
 
-// ====== Catch-all route (for React Router) ======
-app.get("/:path(.*)", (req, res) => {
+// ====== Catch-all Route (Express 5 safe using RegExp) ======
+app.all(/.*/, (req, res) => {
+  // Prevent React from hijacking API or upload routes
   if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/uploads")) {
     return res.status(404).json({ message: "Not Found" });
   }
+
+  // Serve React index.html for all other routes
   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
 
