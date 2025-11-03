@@ -31,8 +31,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",      // Local development
-      "https://petalebakery.com",   // Live domain
+      "http://localhost:5173",        // Local development
+      "https://petalebakery.com",     // Live domain
       "https://www.petalebakery.com", // Optional www
     ],
     credentials: false,
@@ -56,7 +56,7 @@ app.use("/api/preorder", preorderRoutes);
 app.use("/api/admin/preorder", adminPreorderRoutes);
 app.use("/api/checkout", checkoutRoutes);
 
-// ====== Health Check (for Render monitoring) ======
+// ====== Health Check (MUST be before frontend routes) ======
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -72,16 +72,13 @@ app.get("/", (req, res) => {
 // ====== Serve Frontend (React Build) ======
 app.use(express.static(path.join(__dirname, "frontend", "dist")));
 
-// Catch-all route: send index.html for any non-API route
-app.get('/:path(.*)', (req, res) => {
-  if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/uploads')) {
-    return res.status(404).json({ message: 'Not Found' });
+// ====== Catch-all route (for React Router) ======
+app.get("/:path(.*)", (req, res) => {
+  if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/uploads")) {
+    return res.status(404).json({ message: "Not Found" });
   }
-  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
-
-
-
 
 // ====== MongoDB Connection ======
 const PORT = process.env.PORT || 10000;
@@ -92,6 +89,7 @@ mongoose
     console.log("✅ MongoDB Connected");
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
+      console.log("🌸 Pétale Bakery backend fully initialized and ready");
     });
   })
   .catch((err) => console.error("Mongo connection error:", err));
