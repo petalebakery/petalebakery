@@ -73,13 +73,13 @@ app.get("/", (req, res) => {
 app.use(express.static(path.join(__dirname, "frontend", "dist")));
 
 // Catch-all route: send index.html for any non-API route
-// Catch-all route: send index.html for any non-API route
-app.get('/:path(*)', (req, res) => {
+app.get('/:path(.*)', (req, res) => {
   if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/uploads')) {
     return res.status(404).json({ message: 'Not Found' });
   }
   res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
 });
+
 
 
 
