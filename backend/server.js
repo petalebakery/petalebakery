@@ -1,3 +1,4 @@
+// ====== Imports ======
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -5,7 +6,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// ===== Import Routes =====
+// ====== Import Routes ======
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -16,64 +17,79 @@ import preorderRoutes from "./routes/preorderRoutes.js";
 import adminPreorderRoutes from "./routes/adminPreorderRoutes.js";
 import checkoutRoutes from "./routes/checkoutRoutes.js";
 
-// ===== Config =====
+// ====== Config ======
 dotenv.config();
 
-// ===== Resolve __dirname =====
+// ====== Resolve __dirname for ES Modules ======
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ===== Create Express App =====
+// ====== Create Express App ======
 const app = express();
 
-// ===== Middleware =====
+// ====== Middleware ======
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",             // local dev
-      "https://petalebakery.com",          // live domain
-      "https://www.petalebakery.com",      // optional www
+      "http://localhost:5173",      // Local development
+      "https://petalebakery.com",   // Live domain
+      "https://www.petalebakery.com", // Optional www
     ],
     credentials: false,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ===== Static Folder (for uploads like product images) =====
+// ====== Static Folder (for image uploads, etc.) ======
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ===== API Routes =====
+// ====== API Routes ======
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/finance", financeRoutes);
-
-// ===== 🧁 Pre-Order Routes =====
 app.use("/api/preorder", preorderRoutes);
 app.use("/api/admin/preorder", adminPreorderRoutes);
 app.use("/api/checkout", checkoutRoutes);
 
-// ===== Health Check Routes (Render uses this to confirm app is running) =====
+// ====== Health Check (for Render monitoring) ======
 app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok", message: "Pétale Bakery API healthy 🌸" });
+  res.status(200).json({
+    status: "ok",
+    message: "🌸 Pétale Bakery API healthy",
+  });
 });
 
+// ====== Root API Check ======
 app.get("/", (req, res) => {
   res.status(200).send("🌸 Pétale Bakery API running");
 });
 
-// ===== MongoDB Connection =====
+// ====== Serve Frontend (React Build) ======
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+// Catch-all route: send index.html for any non-API route
+app.get("*", (req, res) => {
+  // Prevent interfering with API or uploads routes
+  if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/uploads")) {
+    return res.status(404).json({ message: "Not Found" });
+  }
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
+
+// ====== MongoDB Connection ======
 const PORT = process.env.PORT || 10000;
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB Connected");
-    app.listen(PORT, () =>
-      console.log(`🚀 Server running on port ${PORT}`)
-    );
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
   })
   .catch((err) => console.error("Mongo connection error:", err));
