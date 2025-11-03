@@ -73,13 +73,13 @@ app.get("/", (req, res) => {
 app.use(express.static(path.join(__dirname, "frontend", "dist")));
 
 // Catch-all route: send index.html for any non-API route
-app.get("*", (req, res) => {
-  // Prevent interfering with API or uploads routes
+app.get("/*", (req, res) => {
   if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/uploads")) {
     return res.status(404).json({ message: "Not Found" });
   }
   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
+
 
 // ====== MongoDB Connection ======
 const PORT = process.env.PORT || 10000;
